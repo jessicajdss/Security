@@ -15,8 +15,18 @@ namespace AutenticacaoEFCookie.Dados
             contexto.Usuarios.Add(usuario);
 
             var permissao = new Permissao(){
-                
-            }
+                Nome = "Financeiro"
+            };
+
+            contexto.Permissoes.Add(permissao);
+
+            var usuariopermissao = new UsuarioPermissao(){
+                IdUsuarioPermissao = usuario.IdUsuario,
+                IdPermissao = permissao.IdPermissao
+            };
+
+            contexto.UsuariosPermissoes.Add(usuariopermissao);
+            contexto.SaveChanges();
 
 
         }
