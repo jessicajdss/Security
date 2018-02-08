@@ -19,7 +19,6 @@ namespace AutenticacaoEFCookie.Models
         public int IdPermissao { get; set; }
 
 
-
         [ForeignKey("IdPermissao")]
         public Permissao Permissao { get; set; }
     }

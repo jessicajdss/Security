@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AutenticacaoEFCookie.Controllers
 {
-    [Authorize]
+    [Authorize(Roles="Financeiro")]
     public class FinanceiroController : Controller
     {
         public IActionResult Index (){

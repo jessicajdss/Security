@@ -6,6 +6,7 @@ using AutenticacaoEFCookie.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutenticacaoEFCookie.Controllers
 {
@@ -25,7 +26,9 @@ namespace AutenticacaoEFCookie.Controllers
         [HttpPost]
         public IActionResult Login(Usuario usuario){
             try{
-                Usuario user = _contexto.Usuarios.FirstOrDefault(c=> c.Email == usuario.Email && c.Senha == usuario.Senha);
+                Usuario user = _contexto.Usuarios.Include("UsuariosPermissoes")
+                                                                .Include("UsuariosPermissoes.Permissao")
+                                                                .FirstOrDefault(c=> c.Email == usuario.Email && c.Senha == usuario.Senha);
 
                 if(user != null){
                     var claims = new List<Claim>();
@@ -33,6 +36,11 @@ namespace AutenticacaoEFCookie.Controllers
                     claims.Add(new Claim(ClaimTypes.Email,user.Email));
                     claims.Add(new Claim(ClaimTypes.Name,user.Nome));
                     claims.Add(new Claim(ClaimTypes.Sid,user.IdUsuario.ToString()));
+
+                    foreach (var item in user.UsuariosPermissoes)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, item.Permissao.Nome));
+                    }
                     
                     var claimsIdentity = new ClaimsIdentity(
                         claims, CookieAuthenticationDefaults.AuthenticationScheme                       
